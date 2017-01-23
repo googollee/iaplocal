@@ -34,6 +34,7 @@ type Receipts struct {
 	ApplicationVersion         string
 	OpaqueValue                []byte
 	SHA1Hash                   []byte
+	ReceiptCreationDate        time.Time
 	InApp                      []Receipt
 	OriginalApplicationVersion string
 	ExpirationDate             time.Time
@@ -153,6 +154,11 @@ func parsePKCS(pkcs *pkcs7.PKCS7) (ret Receipts, err error) {
 			ret.OpaqueValue = ra.Value
 		case 5:
 			ret.SHA1Hash = ra.Value
+		case 12:
+			ret.ReceiptCreationDate, err = asn1ParseTime(ra.Value)
+			if err != nil {
+				return
+			}
 		case 17:
 			var inApp Receipt
 			inApp, err = parseInApp(ra.Value)
