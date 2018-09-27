@@ -105,7 +105,7 @@ func verifyCertificates(root *x509.Certificate, certs []*x509.Certificate) bool 
 	for _, cert := range certs {
 		chain, err := cert.Verify(opts)
 		for _, c := range chain {
-			if c[0] == c[1] {
+			if len(c) > 1 && c[0] == c[1] {
 				// self certificate
 				return false
 			}
